@@ -281,9 +281,9 @@ If you use this code in your research, please cite:
 - **Cloud Score+ Paper**: https://www.nature.com/articles/s41597-023-02543-0
 - **s2cloudless**: https://github.com/sentinel-hub/sentinel2-cloud-detector
 - **Zotero Library**: [Add your shared Zotero collection link]
-- **Google Scholar**: [Add your profile link]
+- **Google Scholar**: https://scholar.google.com/citations?user=TQEmmAoAAAAJ&hl=en
 - **ORCID**: 
-  - Abdulrahman Hussein: [Your ORCID]
+  - Abdulrahman Hussein: https://orcid.org/0009-0003-0401-9219
   - Joseph D. Ortiz: https://orcid.org/0000-0003-1112-3292
 
 ---
@@ -291,7 +291,7 @@ If you use this code in your research, please cite:
 ## Authors & Contact
 
 - **Abdulrahman Hussein** — Lead Developer, PhD Candidate, Department of Earth Sciences, Kent State University  
-  Email: ahusse12@kent.edu | ORCID: [Your ORCID ID]
+  Email: ahusse12@kent.edu | ORCID: https://orcid.org/0009-0003-0401-9219
 
 - **Dr. Joseph D. Ortiz** — Principal Investigator, Professor, Department of Earth Sciences, Kent State University  
   Email: jortiz4@kent.edu | ORCID: https://orcid.org/0000-0003-1112-3292
