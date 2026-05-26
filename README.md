@@ -259,15 +259,19 @@ If you use this code in your research, please cite:
 
 ```bibtex
 @software{hussein_2026_s2cloudmask,
-  author = {Hussein, Abdulrahman and Ortiz, Joseph D.},
-  title = {Sentinel-2 Hybrid Cloud Masking Framework},
-  year = {2026},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/YOUR_USERNAME/S2-CloudMask-Hybrid}},
-  version = {1.0.0}
+  author       = {Hussein, Abdulrahman and Ortiz, Joseph D.},
+  title        = {Sentinel-2 Hybrid Cloud Masking Framework},
+  year         = {2026},
+  publisher    = {Zenodo},
+  version      = {1.0.2},
+  doi          = {10.5281/zenodo.20395978},
+  url          = {https://doi.org/10.5281/zenodo.20395978}
 }
 ```
+
+### APA Format
+
+> Hussein, A., & Ortiz, J. D. (2026). *Sentinel-2 Hybrid Cloud Masking Framework* (Version 1.0.2) [Software]. Zenodo. https://doi.org/10.5281/zenodo.20395978
 
 ### Zenodo DOI
 

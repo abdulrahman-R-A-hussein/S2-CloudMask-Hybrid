@@ -11,7 +11,9 @@ authors:
     orcid: "https://orcid.org/0000-0003-1112-3292"
 repository-code: "https://github.com/abdulrahman-R-A-hussein/S2-CloudMask-Hybrid"
 license: MIT
-version: 1.0.0
+version: 1.0.2
+doi: 10.5281/zenodo.20395978
+url: "https://doi.org/10.5281/zenodo.20395978"
 date-released: 2026-05-26
 keywords:
   - remote-sensing
