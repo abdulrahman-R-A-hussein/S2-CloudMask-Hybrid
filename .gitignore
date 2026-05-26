@@ -1,0 +1,58 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node.js (if any local tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if any local scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data files (if you add local data)
+*.tif
+*.tiff
+*.nc
+*.hdf
+*.h5
+
+# Credentials and secrets
+.env
+.env.local
+*.key
+*.pem
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# GEE exports (if downloading locally)
+exports/
+downloads/
+output/
+
+# Large files
+*.zip
+*.tar.gz
+*.rar

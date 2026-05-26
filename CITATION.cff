@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and any related publications."
+type: software
+title: "Sentinel-2 Hybrid Cloud Masking Framework"
+authors:
+  - family-names: "Hussein"
+    given-names: "Abdulrahman"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "Ortiz"
+    given-names: "Joseph D."
+    orcid: "https://orcid.org/0000-0003-1112-3292"
+repository-code: "https://github.com/YOUR_USERNAME/S2-CloudMask-Hybrid"
+license: MIT
+version: 1.0.0
+date-released: 2026-05-26
+keywords:
+  - remote-sensing
+  - sentinel-2
+  - cloud-masking
+  - google-earth-engine
+  - water-quality
+  - satellite-imagery
+  - coastal-monitoring
+abstract: "A Google Earth Engine implementation combining five cloud detection methods (SCL, s2cloudless, Cloud Score+ cs, Cloud Score+ cs_cdf, and shadow projection) using pixel-union logic with confidence scoring. Optimized for water quality remote sensing applications."
