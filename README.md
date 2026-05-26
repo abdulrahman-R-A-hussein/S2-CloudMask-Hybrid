@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Google Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-Ready-green.svg)](https://earthengine.google.com/)
 [![Sentinel-2](https://img.shields.io/badge/Sentinel--2-MSI-blue.svg)](https://sentinel.esa.int/web/sentinel/missions/sentinel-2)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20395978.svg)](https://doi.org/10.5281/zenodo.20395978)
 
 > **A multi-method hybrid approach for robust cloud and shadow detection in Sentinel-2 imagery**  
 > Optimized for water quality monitoring and coastal remote sensing applications.
@@ -268,9 +269,9 @@ If you use this code in your research, please cite:
 }
 ```
 
-### Zenodo DOI (after release)
+### Zenodo DOI
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20395978.svg)](https://doi.org/10.5281/zenodo.20395978)
 
 ---
 
