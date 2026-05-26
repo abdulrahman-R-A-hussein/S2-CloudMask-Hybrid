@@ -259,7 +259,7 @@ If you use this code in your research, please cite:
 
 ```bibtex
 @software{hussein_2026_s2cloudmask,
-  author       = {Hussein, Abdulrahman and Ortiz, Joseph D.},
+  author       = {Hussein, Abdulrahman},
   title        = {Sentinel-2 Hybrid Cloud Masking Framework},
   year         = {2026},
   publisher    = {Zenodo},
@@ -271,7 +271,7 @@ If you use this code in your research, please cite:
 
 ### APA Format
 
-> Hussein, A., & Ortiz, J. D. (2026). *Sentinel-2 Hybrid Cloud Masking Framework* (Version 1.0.2) [Software]. Zenodo. https://doi.org/10.5281/zenodo.20395978
+> Hussein, A. (2026). *Sentinel-2 Hybrid Cloud Masking Framework* (Version 1.0.2) [Software]. Zenodo. https://doi.org/10.5281/zenodo.20395978
 
 ### Zenodo DOI
 
@@ -287,19 +287,14 @@ If you use this code in your research, please cite:
 - **s2cloudless**: https://github.com/sentinel-hub/sentinel2-cloud-detector
 - **Zotero Library**: [Add your shared Zotero collection link]
 - **Google Scholar**: https://scholar.google.com/citations?user=TQEmmAoAAAAJ&hl=en
-- **ORCID**: 
-  - Abdulrahman Hussein: https://orcid.org/0009-0003-0401-9219
-  - Joseph D. Ortiz: https://orcid.org/0000-0003-1112-3292
+- **ORCID**: https://orcid.org/0009-0003-0401-9219
 
 ---
 
 ## Authors & Contact
 
-- **Abdulrahman Hussein** — Lead Developer, PhD Candidate, Department of Earth Sciences, Kent State University  
+- **Abdulrahman Hussein** — PhD Candidate, Department of Earth Sciences, Kent State University  
   Email: ahusse12@kent.edu | ORCID: https://orcid.org/0009-0003-0401-9219
-
-- **Dr. Joseph D. Ortiz** — Principal Investigator, Professor, Department of Earth Sciences, Kent State University  
-  Email: jortiz4@kent.edu | ORCID: https://orcid.org/0000-0003-1112-3292
 
 ---
 

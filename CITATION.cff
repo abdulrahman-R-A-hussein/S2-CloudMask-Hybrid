@@ -6,9 +6,6 @@ authors:
   - family-names: "Hussein"
     given-names: "Abdulrahman"
     orcid: "https://orcid.org/0009-0003-0401-9219"
-  - family-names: "Ortiz"
-    given-names: "Joseph D."
-    orcid: "https://orcid.org/0000-0003-1112-3292"
 repository-code: "https://github.com/abdulrahman-R-A-hussein/S2-CloudMask-Hybrid"
 license: MIT
 version: 1.0.2
