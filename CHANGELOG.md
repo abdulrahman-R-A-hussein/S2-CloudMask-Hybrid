@@ -5,7 +5,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions follo
 a minor bump.
 
 ## [Unreleased]
-Documentation only. `S2_CloudMask_SCIENTIFIC.js` is unchanged.
+`S2_CloudMask_SCIENTIFIC.js` is unchanged.
+
+### Added (research, 2026-11-07, second session)
+- `python/` benchmark package `cloudbench`:
+  - CloudSEN12+ reader and Earth Engine input fetch;
+  - numpy replica of every v1.0.2 rule;
+  - metrics with site-bootstrap CIs;
+  - pilot runner, alignment and provenance gate;
+  - 7 unit tests.
+- `results/pilot_2026-11-07/`: first measured accuracy numbers (validation split, water vs land).
+- `docs/RESEARCH_PLAN.md`, `docs/EXPERIMENT_PROTOCOL.md` (pre-registration draft), `docs/PAPER1_OUTLINE.md`.
+- `LITERATURE_REVIEW.md` §8: chronological map 1988–2026 and gap matrix G1–G10.
+- Decisions D-14 to D-17; audit items F-12 (net buffer is about 30 m) and X-05 (CloudSEN12+ bundled masks:
+  one corrupted site, SCL/s2cloudless differ from today's GEE on a minority of patches); roadmap R0–R6.
+
+### Earlier in Unreleased (first session)
+Documentation only.
 
 ### Added
 - `AGENTS.md` (hand-off entry point for any AI tool or person) and `CLAUDE.md`.

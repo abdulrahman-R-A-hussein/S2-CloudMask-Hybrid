@@ -1,0 +1,32 @@
+[project]
+name = "cloudbench"
+version = "0.1.0"
+description = "Benchmark and water-aware fusion for Sentinel-2 cloud and shadow masks (S2-CloudMask-Hybrid research code)"
+requires-python = ">=3.11,<3.12"
+license = { text = "MIT" }
+authors = [{ name = "Abdulrahman Hussein" }]
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "scipy>=1.13",
+  "rasterio>=1.4",
+  "tacoreader>=0.5.3,<1.0",
+  "earthengine-api>=1.4",
+  "scikit-learn>=1.5",
+  "matplotlib>=3.9",
+  "requests>=2.31",
+  "aiohttp>=3.9",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cloudbench"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

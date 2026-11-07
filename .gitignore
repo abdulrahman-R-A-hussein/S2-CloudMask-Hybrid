@@ -56,3 +56,16 @@ output/
 *.zip
 *.tar.gz
 *.rar
+
+# Python benchmark (python/)
+.venv/
+python/data/
+*.npz
+
+# Never commit credentials (service-account keys etc.)
+*key*.json
+*credentials*.json
+service-account*.json
+
+# Benchmark run logs are provenance: keep them
+!results/**/run.log

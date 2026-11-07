@@ -1,0 +1,11 @@
+detector inputs: Earth Engine (S2_SR_HARMONIZED B8+SCL, S2_CLOUD_PROBABILITY, CLOUD_SCORE_PLUS V1); labels/WorldCover/DL masks: CloudSEN12+ (D-17)
+split=validation label_type=high size=509 patches=535
+provenance (patches=535): median r(cs_cdf CS12 vs GEE)=1.000; patches with r<0.9: 4; median SCL agreement=100.0%; median s2cloudless exact match=100.0%; median GEE coverage of labelled pixels=100.0% (min 100.0%)
+scored patches=535 failed=0
+water-rich patches (>= 5% water)=105
+params={"CS_CDF_THRESH": 0.6, "CS_THRESH": 0.6, "CLOUD_PROB_THRESH": 50, "NIR_DARK_THRESH": 0.15, "CLOUD_PROJ_DIST": 1, "BUFFER": 50, "ERODE": 20}
+seconds=61
+git=180ed56
+python=3.11.16
+numpy=2.4.6 pandas=3.1.1 scipy=1.17.1 rasterio=1.4.4 tacoreader=0.6.5
+gee_alignment: 8/10 patches pass (B2 r>0.99 at zero shift); cs_cdf r min=1.0000

@@ -85,8 +85,9 @@ them **over water** specifically: **gap**.
    so only SCL class 3 and Cloud Score+ can catch shadows on the lagoon.
 3. **Cloud-edge contamination and buffers.** Clear pixels near clouds are brighter than they
    should be because of 3-D radiative effects. In a MODIS case study the enhancement was still
-   present about 2–3 km from clouds and biased aerosol retrievals high (Wen, Marshak & Cahalan,
-   *JGR*, doi:10.1029/2006JD008267, DOI resolves but *title and year not verified*; NASA summary
+   present about 2–3 km from clouds and biased aerosol retrievals high (Wen et al. 2007, "3-D
+   aerosol-cloud radiative interaction observed in collocated MODIS and ASTER images of cumulus
+   cloud fields", *JGR Atmospheres*, doi:10.1029/2006JD008267, Crossref-verified; NASA summary
    https://espo.nasa.gov/ave-costarica2/node/15825). Water Rrs is a small signal, so the same
    bias matters more for water than for land. Water processors flag a cloud buffer:
    IdePix-S2 has *cloud sure / ambiguous / buffer / cirrus / shadow* flags with the buffer set
@@ -189,3 +190,67 @@ script prints, measure **yield**, not accuracy: the union always "wins" by const
 | L8 | QA60 is empty for our 2022 dates | Keep QA60 out; document why | done (D-07) |
 | L9 | Deep-learning masks lead current benchmarks | Run OmniCloudMask offline on the same reference set as a ceiling | D5 |
 | L10 | Thin cirrus is poorly caught without B10 | Optional L1C B10 test, or the CDI | D4 |
+
+---
+
+## 8. Chronological map, oldest to newest, and the gap matrix (added 2026-11-07)
+
+Every DOI in this section was checked against Crossref on 2026-11-07, unless it is marked.
+
+### 8.1 Eras
+| Era | Year | Work | What it introduced | Source |
+|---|---|---|---|---|
+| **1. Thresholds** | 1988 | Saunders & Kriebel (APOLLO, AVHRR) | Multi-test spectral/spatial thresholds for clear vs cloudy | doi:10.1080/01431168808954841 |
+| | 1991 | Rossow & Schiffer (ISCCP) | Global operational cloud climatology from thresholds against clear-sky composites | doi:10.1175/1520-0477(1991)072<0002:ICDP>2.0.CO;2 |
+| | 1998 | Ackerman et al. (MODIS MOD35) | Confidence-graded multi-test cloud mask, a precursor of "probability" masks | doi:10.1029/1998JD200032 |
+| | 2000/2006 | Irish; Irish et al. (Landsat 7 ACCA) | Scene-level automatic cloud cover assessment for Landsat | doi:10.1117/12.410358; doi:10.14358/PERS.72.10.1179 |
+| **2. Physics + objects** | 2010 | Hagolle et al. (MAJA multitemporal) | Uses the previous clear date: time series against single date | doi:10.1016/j.rse.2010.03.002 |
+| | 2012 | Zhu & Woodcock (Fmask) | Object-based cloud, plus shadow by geometric projection over a cloud-height search | doi:10.1016/j.rse.2011.10.028 |
+| | 2014 | Zhu & Woodcock (Tmask) | Multitemporal model of expected reflectance | doi:10.1016/j.rse.2014.06.012 |
+| | 2015 | Zhu, Wang & Woodcock (Fmask 3.x) | Extended to Landsat 4–8 and Sentinel-2 | doi:10.1016/j.rse.2014.12.014 |
+| | 2016 | Hollstein et al. | Labelled spectral database; ready-to-use S2 classifiers | doi:10.3390/rs8080666 |
+| | 2017 | Main-Knorn et al. (Sen2Cor) | Scene classification (SCL) shipped with every L2A product | doi:10.1117/12.2278218 |
+| | 2017 | Foga et al. (CFMask, L8 Biome) | Operational Landsat comparison and validation set | doi:10.1016/j.rse.2017.03.026 |
+| | 2018 | Frantz et al. (CDI) | S2 band parallax separates clouds from bright surfaces | doi:10.1016/j.rse.2018.04.046 |
+| | 2019 | Qiu, Zhu & He (Fmask 4.0) | Adds water occurrence and DEM | doi:10.1016/j.rse.2019.05.024 |
+| **3. Machine learning** | 2014 | Hughes & Hayes (SPARCS) | Neural network plus spatial post-processing for cloud and shadow | doi:10.3390/rs6064907 |
+| | 2017 | Zupanc (s2cloudless) | Single-scene gradient boosting; pre-computed in GEE | Medium post, §1 |
+| | 2019 | Jeppesen et al. (RS-Net) | U-Net cloud detection | doi:10.1016/j.rse.2019.03.039 |
+| | 2019 | Mohajerani & Saeedi (Cloud-Net, 38-Cloud) | End-to-end CNN for Landsat 8 | doi:10.1109/IGARSS.2019.8898776 |
+| | 2019 | Wieland et al. | **Multi-sensor** CNN for cloud and shadow (an early cross-sensor attempt) | doi:10.1016/j.rse.2019.05.022 |
+| | 2021 | López-Puigdollers et al. | DL beats rules within one dataset but not across datasets | doi:10.3390/rs13050992 |
+| | 2021 | Domnich et al. (KappaMask) | Operational S2 DL processor | doi:10.3390/rs13204100 |
+| **4. Benchmarks** | 2019 | Baetens et al. (ALCD) | 32-scene S2 reference masks; MAJA ≈ Fmask > Sen2Cor | doi:10.3390/rs11040433 |
+| | 2020 | Tarrio et al. | **Ensembles beat single algorithms (up to +2.7 % OA)** | doi:10.1016/j.srs.2020.100010 |
+| | 2022 | Skakun et al. (CMIX) | 10 algorithms × 5 datasets; rankings depend on the reference | doi:10.1016/j.rse.2022.112990 |
+| | 2022/2024 | Aybar et al. (CloudSEN12, CloudSEN12+) | 50k patches, 4 classes, CC0 | doi:10.1038/s41597-022-01878-2; doi:10.1016/j.dib.2024.110852 |
+| | 2023 | Aybar et al. | Documents incorrect labels in CloudSEN12 | doi:10.1109/IGARSS52108.2023.10282381 |
+| **5. Large models** | 2023 | Pasquarella et al. (Cloud Score+) | Space-time video model; per-pixel usability score; global in GEE | doi:10.1109/CVPRW59228.2023.00206 |
+| | 2024 | Wright et al. (CloudS2Mask) | S2 DL, best published balanced accuracy at the time | doi:10.1016/j.rse.2024.114122 |
+| | 2024 | Francis (SEnSeIv2) | Sensor-independent, multimodal | doi:10.1109/TGRS.2024.3391625 |
+| | 2024 | Wang et al. (survey) | Open problems: thin cloud, **cross-sensor generality**, labels | doi:10.3390/rs16234583 |
+| | 2025 | Wright et al. (OmniCloudMask) | Sensor-agnostic (R, G, NIR), mixed resolution | doi:10.1016/j.rse.2025.114694 |
+| | 2026 | Cairns (independent audit, *not peer-reviewed*) | CloudSEN12+ test: DL leads; **water leak 11.0 % vs 6.1 % overall** | github.com/syre-ai/cloudmask-acceptance-audit |
+| **Aquatic thread** | 2007 | Wen et al. | Near-cloud 3-D brightening of "clear" pixels | doi:10.1029/2006JD008267 |
+| | 2019 | Ngoc et al. (WiPE) | Water-pixel extraction; Fmask fails on turbid water; shadows over water confused | doi:10.1016/j.rse.2019.01.024 |
+| | 2021 | IdePix S2 ATBD | Cloud sure / ambiguous / buffer flags for water processors | doi:10.5281/zenodo.5788067 |
+| | 2024 | Wieland et al. (S1S2-Water) | Water segmentation set; authors call for more cloud/shadow-over-water samples | doi:10.1109/JSTARS.2023.3333969 |
+| | 2025 | Wang & Jiang | Floating algae masked as cloud; AFAI recovery | §3 (*not verified*) |
+| | 2026 | Ducar et al. | US inland-water S2 reflectance: ACOLITE has no shadow mask; shadows have NDWI > 0 | doi:10.1002/lol2.70112 |
+
+### 8.2 Gap matrix (what is missing, the evidence, and how this project answers it)
+| Gap | What is missing | Evidence | Our answer | Paper |
+|---|---|---|---|---|
+| G1 | Water-stratified benchmark of S2 masks, including Cloud Score+ and DL | No peer-reviewed study found (§2). Only the 2026 non-peer-reviewed audit gives one water number | Benchmark with water/land/coast/turbid/bloom strata and site-bootstrap CIs | P1 |
+| G2 | Water cloud/shadow label set | S1S2-Water authors ask for it; CloudSEN12+ is not water-focused | 150–300 author-labelled water patches with κ | P1 → P2 release |
+| G3 | Cloud shadow over water | WiPE; Ducar 2026 (NDWI > 0); our script skips water (F-03) | M4 geometric + relative-darkness module | P1 |
+| G4 | Bloom/turbid water flagged as cloud, unquantified for S2 | Ocean-colour and Sargassum literature only (§3) | Bloom stratum + M5 guard | P1 |
+| G5 | Fusion of *modern* masks | Tarrio 2020 fused older algorithms on land; no Cloud Score+ fusion study found | Learned, surface-conditional fusion exported to GEE | P1 |
+| G6 | Calibrated probabilities from masks | Rarely evaluated; uncertainty heuristics in DL papers | Isotonic calibration, ECE, reliability diagrams | P1 |
+| G7 | Near-cloud buffer distance for water Rrs | Wen 2007 (aerosols); no S2 water value found | Measured Rrs bias against distance to cloud; graded flag | P1 |
+| G8 | Cross-sensor generality | Wang et al. 2024 survey; early attempts Wieland 2019, OmniCloudMask 2025 | Transfer to Landsat/HLS/Planet/OLCI/drones | P3 |
+| G9 | Effect of mask choice on water-quality retrievals | Rarely reported | IRL chl-a/Rrs matchups by mask | P1 |
+| G10 (found 2026-11-07) | Dataset provenance: bundled third-party masks can be stale or corrupted | CloudSEN12+ v1.1.2: one site (ROI_00009) has corrupted Cloud Score+ layers; SCL/s2cloudless differ from today's GEE on 87/55 of 535 validation patches (`results/pilot_2026-11-07/provenance_cs12_vs_gee.csv`) | Fetch inputs from the source and report the check | P1 (methods note) |
+
+**Search log for "first" claims.** Before any "first" appears in a paper, record the
+database, query string, date and hit count here. None has been recorded yet.

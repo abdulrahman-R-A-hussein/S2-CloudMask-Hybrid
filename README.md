@@ -203,8 +203,13 @@ S2-CloudMask-Hybrid/
 │   ├── LOG.md                     # Dated project history
 │   ├── DECISIONS.md               # Design decisions and their reasons
 │   ├── AUDIT_2026-11-07.md        # Known issues and checked claims
-│   ├── LITERATURE_REVIEW.md       # Literature with DOIs
-│   └── ROADMAP.md                 # Planned work with acceptance criteria
+│   ├── LITERATURE_REVIEW.md       # Literature with DOIs, oldest to newest, gap matrix
+│   ├── ROADMAP.md                 # Planned work with acceptance criteria
+│   ├── RESEARCH_PLAN.md           # Research program (water first)
+│   ├── EXPERIMENT_PROTOCOL.md     # Pre-registered tests
+│   └── PAPER1_OUTLINE.md          # Paper skeleton
+├── python/                        # Benchmark code (cloudbench), tests
+├── results/                       # Benchmark outputs (CSV + run logs)
 ├── examples/
 │   └── custom_area_template.js    # Template for your area
 └── .gitignore                     # Git ignore rules
@@ -285,6 +290,10 @@ New contributors and AI assistants should start with [AGENTS.md](AGENTS.md), the
 | [docs/AUDIT_2026-11-07.md](docs/AUDIT_2026-11-07.md) | Code findings and checked claims |
 | [docs/LITERATURE_REVIEW.md](docs/LITERATURE_REVIEW.md) | Literature for every method and planned improvement |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Planned work with acceptance criteria |
+| [docs/RESEARCH_PLAN.md](docs/RESEARCH_PLAN.md) | Research program (water first, three papers) |
+| [docs/EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md) | Pre-registered hypotheses, splits, metrics |
+| [docs/PAPER1_OUTLINE.md](docs/PAPER1_OUTLINE.md) | Paper 1 skeleton (numbers only from `results/`) |
+| [python/README.md](python/README.md) | Benchmark code: scores the masks against expert labels, water vs land |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 
 ---

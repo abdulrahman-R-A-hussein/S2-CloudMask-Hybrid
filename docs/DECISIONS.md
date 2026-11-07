@@ -139,3 +139,48 @@ To add one, append D-NN at the bottom, set `status: current`, and log it in [`LO
 - **Rationale:** text errors (inverted tuning advice, unmeasured numbers) mislead users today.
   Code changes alter scientific output and need their own release and test.
 - **Revisit when:** Phase B starts.
+
+### D-14 · Research strategy: staged, water first, three papers (2026-11-07)
+- **Status:** current
+- **Decision:** P1 is a water-stratified benchmark plus a GEE-native water-aware fusion plus water
+  labels. P2 is a water-aware deep-learning model and dataset. P3 is cross-sensor transfer. See
+  [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md).
+- **Rationale:** the independent 2026 audit shows deep learning leading overall and every mask
+  leaking more over water. Water is the open, checkable gap and the author's application.
+- **Revisit when:** after R1. If deep learning is already near-perfect over water, P1 shifts to
+  benchmark + dataset + calibration.
+
+### D-15 · CloudSEN12+ test split locked until the protocol is frozen (2026-11-07)
+- **Status:** current
+- **Decision:** all development and pilot work uses `train`/`validation`. `run_pilot.py` refuses
+  `--split test`. The test split is run once, after [`EXPERIMENT_PROTOCOL.md`](EXPERIMENT_PROTOCOL.md)
+  v1.0 is tagged.
+- **Rationale:** headline numbers must not be tuned on the data that reports them.
+
+### D-16 · Earth Engine access through the existing service account (2026-11-07)
+- **Status:** current
+- **Decision:** `python/src/cloudbench/auth.py` (adapted from SpectraLab) reads the key path
+  from `GEE_SERVICE_ACCOUNT_JSON`, set per run. It uses the high-volume endpoint. The key is
+  never opened by the assistant, printed or committed (`.gitignore` blocks `*key*.json`).
+
+### D-17 · Detector inputs come from Earth Engine, not from CloudSEN12+ "extra" (2026-11-07)
+- **Status:** current
+- **Decision:** SCL, B8, s2cloudless, `cs` and `cs_cdf` are fetched from GEE on each patch's grid.
+  From CloudSEN12+ we use only the labels, WorldCover and the deep-learning masks.
+- **Rationale (from all 535 validation patches,
+  `results/pilot_2026-11-07/provenance_cs12_vs_gee.csv`):**
+  - For most patches the bundled layers match GEE exactly: `cs_cdf` median r = 1.000, and only
+    4 patches have r < 0.9.
+  - All 5 dates of **one site (ROI_00009)** carry corrupted Cloud Score+ layers: 85–98 % of
+    `cs_cdf` values fall outside 0–10000, and the rest are anti-correlated with GEE.
+  - SCL differs from today's GEE SCL on more than 5 % of pixels in 87 of 535 patches, and
+    s2cloudless in 55. That is consistent with the products having been regenerated since the
+    dataset was built (*cause not verified*).
+  - Fetching from GEE keeps every input identical to what the operational script uses today.
+- **Correction note:** the first diagnosis (same day) examined only ROI_00009 and wrongly
+  generalised to "the layers disagree with GEE". The full run showed the problem is one site.
+- **Side effect:** an early pilot that read the bundled layers silently dropped the ROI_00009
+  pixels through its validity filter. In a 6-patch smoke test that included that site, it
+  scored 277,542 pixels, against 1,554,486 after the fix. It was stopped and replaced.
+- **Follow-up:** consider reporting ROI_00009 to the dataset maintainers (an outward action; the
+  author decides).

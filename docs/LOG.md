@@ -97,3 +97,80 @@ the project up cold.
 - (Done after all: committed as `e36ebd5` on `main` and pushed to GitHub at the author's request.)
 
 **Next:** see [`STATE.md`](STATE.md) → "Next actions".
+
+## 2026-11-07 (second session): research program planned; pilot benchmark R0 run
+**Why.** The author wants to publish and to build the best cloud-masking tool: Sentinel-2
+first, then other sensors; the literature covered from oldest to newest; numbers for every
+internal method.
+
+**Decided** (with the author):
+- staged, water-first program of three papers (D-14);
+- the author will hand-label water scenes;
+- GEE access through the existing service account (D-16);
+- this session: docs plus a pilot.
+
+**Done:**
+- [`RESEARCH_PLAN.md`](RESEARCH_PLAN.md), [`EXPERIMENT_PROTOCOL.md`](EXPERIMENT_PROTOCOL.md)
+  (pre-registration draft v0.1; H1–H7), [`PAPER1_OUTLINE.md`](PAPER1_OUTLINE.md).
+- `LITERATURE_REVIEW.md` §8: chronological map 1988–2026 and gap matrix G1–G10. 18 more DOIs
+  checked against Crossref. The Wen et al. 2007 citation is now complete.
+- `python/` benchmark (`cloudbench`, uv, Python 3.11) with 7 passing tests, a pilot runner and
+  an alignment gate.
+- ROADMAP rebuilt as research phases R0–R6; decisions D-14 to D-17; audit F-12 and X-05.
+
+**Data facts found (all now handled in code):**
+1. The CloudSEN12+ reader (`tacoreader` < 1.0, TACO v1) takes a row **position**. Reading by
+   index label silently returned the wrong patches. Caught because the labels did not match
+   the metadata percentages.
+2. 509×509 patches are padded on the **bottom and right**, and the padding is labelled "clear".
+   It is cropped.
+3. **Provenance:** the bundled Cloud Score+ layers match GEE except at one site (ROI_00009,
+   corrupted). SCL and s2cloudless differ from today's GEE on 87 and 55 of 535 patches. All
+   inputs are therefore fetched from GEE (D-17).
+   - **Correction:** my first diagnosis looked only at ROI_00009 and over-generalised. Fixed
+     after the full run.
+   - Smoke test before the fix: 277,542 scored pixels. After: 1,554,486.
+4. The v1.0.2 morphology leaves a net buffer of about **30 m, not 50 m** (erode 2 px, dilate
+   5 px), and it deletes clouds narrower than about 40 m (F-12, unit-tested).
+5. Alignment gate (10 patches spread over sites): 8 pass. 2 show a one-pixel offset between
+   GEE and the CloudSEN12+ grid (`results/pilot_2026-11-07/gee_alignment.csv`). The pilot did
+   not exclude unchecked patches. R1 will gate every patch.
+
+**Results.** PILOT, validation split: 535 patches, 107 sites, 138.6 M labelled pixels.
+`results/pilot_2026-11-07/summary.md`. Brackets are 95 % site-bootstrap CIs.
+
+| Method | Leak % all | Discard % all | BOA % all | Leak % water / land | Shadow recall % water / land |
+|---|---|---|---|---|---|
+| SCL | 24.5 | 7.2 | 79.1 | 29.3 / 23.8 | 10.9 / 38.5 |
+| s2cloudless > 50 | 25.1 | 4.9 | 79.2 | 28.9 / 24.5 | 6.2 / 17.7 |
+| Cloud Score+ cs < 0.60 (best GEE single) | 7.6 [6.0, 9.2] | 14.8 | 88.6 [87.4, 89.8] | 11.4 / 7.0 | 57.8 / 91.1 |
+| Cloud Score+ cs_cdf < 0.60 | 22.4 | 0.8 | 83.2 | 25.0 / 22.0 | 12.5 / 46.7 |
+| v1.0.2 union | 5.4 | 19.0 | 87.9 | 10.8 / 4.5 | 58.4 / 92.5 |
+| v1.0.2 FINAL (smoothed) | 4.0 | 23.0 | 86.6 | 9.4 / 3.1 | 63.1 / 96.4 |
+| QA60 | 30.5 | 9.0 | 72.6 | 35.7 / 29.6 | 10.3 / 22.0 |
+| UnetMobV2-v2 (DL, in-domain) | 6.3 | 5.1 | 93.8 [92.9, 94.5] | 6.3 / 6.3 | 76.2 / 90.1 |
+| SEnSeIv2 (DL) | 5.8 | 6.6 | 93.4 | 5.4 / 5.8 | 87.8 / 91.6 |
+
+**What the pilot says** (validation data; no paired tests yet; some CIs overlap):
+1. Every GEE-native mask leaks more over water than over land. The v1.0.2 union goes from 4.5 %
+   to 10.8 %. Both deep-learning masks show no water gap. This is the H1 direction.
+2. **The biggest failure is cloud shadow over water.** Cloud Score+ `cs` and the v1.0.2 union
+   catch about 58 % of shadow pixels on water against about 91–93 % on land. SCL and
+   s2cloudless catch almost none on water (10.9 % and 6.2 %). SEnSeIv2 catches 87.8 %. This
+   confirms M4 (shadow over water) as the most valuable new module.
+3. The v1.0.2 union lowers leak against the best single detector (5.4 % vs 7.6 %) but throws
+   away more clear pixels (19.0 % vs 14.8 %). This is the H2 direction.
+4. At 0.60, `cs_cdf` keeps almost everything (0.8 % discard) but leaks 22.4 %, so its default
+   threshold is badly placed. `cs` is the strongest GEE input. R1 sweeps both.
+5. Deep learning leads GEE-native masks by about 5 BOA points (93–94 % vs 88.6 %). UnetMobV2 was
+   trained on this dataset (in-domain), so its lead is optimistic.
+6. Our numbers sit near the 2026 audit's test-split figures (Cloud Score+ 7.6/14.8 here vs
+   8.5/12.7 there). That is an independent sanity check.
+
+**Not done:**
+- The alignment gate on all patches.
+- Paired tests, threshold sweeps, OmniCloudMask/CloudS2Mask (R1).
+- Labelling setup (R2).
+- Nothing committed.
+
+**Next:** R1 and R2 (see STATE).

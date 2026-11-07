@@ -47,9 +47,23 @@ docs/
   DECISIONS.md                  design decisions D-01…                      ← append when one changes
   AUDIT_2026-11-07.md           findings F-/C-/X- with status
   LITERATURE_REVIEW.md          literature with DOIs; §7 maps findings to roadmap items
-  ROADMAP.md                    phases A–E with acceptance criteria
+  ROADMAP.md                    phases A–B and research phases R0–R6 with acceptance criteria
+  RESEARCH_PLAN.md              research program: water first, papers P1–P3, method M1–M6
+  EXPERIMENT_PROTOCOL.md        pre-registration: hypotheses H1–H7, locked test split, metrics
+  PAPER1_OUTLINE.md             paper skeleton; every number is "TBD (results/...)"
   USAGE.md                      user guide
+python/                         benchmark code (uv project; see python/README.md)
+  src/cloudbench/               data (CloudSEN12+ + GEE), detectors (v1.0.2 replica), metrics
+  scripts/run_pilot.py          scores the masks, water vs land, with site-bootstrap CIs
+  tests/                        pytest
+results/<run>/                  committed outputs: counts, metrics, provenance, run.log
 ```
+
+**Benchmark rules:**
+- The CloudSEN12+ **test split is locked** until EXPERIMENT_PROTOCOL v1.0 is tagged (D-15).
+- Detector inputs come from Earth Engine, **not** from the CloudSEN12+ bundled Cloud Score+
+  layers, which are wrong (D-17).
+- `TortillaDataFrame.read()` takes a row position.
 
 ## Key code locations (`S2_CloudMask_SCIENTIFIC.js`)
 | Lines | What |
