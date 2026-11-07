@@ -48,8 +48,8 @@ The interface has four main panels:
 ### Step 3: Run the Script
 
 1. Click the "Run" button or press Ctrl+Enter
-2. Wait for processing (30-60 seconds)
-3. The map will display with the UI panel on the left
+2. Wait for processing (time depends on area size and server load)
+3. The map will display with the UI panel on the right
 
 ---
 
@@ -107,10 +107,10 @@ Click to see different masking approaches:
 | SCL only | ESA's official scene classification |
 | s2cloudless only | ML-based probability masking |
 | Cloud Score+ cs only | Spectral distance method |
-| Cloud Score+ cs_cdf only | Google's temporal CDF method (recommended) |
+| Cloud Score+ cs_cdf only | Same Cloud Score+ model, score normalized over time (keeps more pixels) |
 | HYBRID standard | Union of 4 cloud methods |
-| HYBRID + shadows | Clouds + shadow projection |
-| **HYBRID FINAL** | **Recommended: smoothed + buffered** |
+| HYBRID + shadows | Clouds + shadow projection (shadow projection skips water) |
+| **HYBRID FINAL** | **Most aggressive: union + shadows, 20 m erosion, 50 m buffer** |
 
 ### Show Detections Toggles
 
@@ -122,9 +122,11 @@ Overlay individual detection layers:
 | Toggle s2cloudless clouds | Yellow | ML probability clouds |
 | Toggle cs clouds | Purple | Spectral distance clouds |
 | Toggle cs_cdf clouds | Blue | CDF method clouds |
-| Toggle shadows | Dark blue | Shadow projection |
-| Toggle HYBRID mask | Red | Final combined mask |
-| Toggle confidence map | Gradient | 0-4 methods agreement |
+| Toggle shadows | Dark blue | Shadow projection (land only) |
+| Toggle HYBRID mask | Red | Final combined mask, shown as the union over all dates (cloudy on at least one date) |
+| Toggle confidence map | Gradient | 0-4 cloud detectors agreeing (highest value over all dates) |
+
+All detection overlays show the **maximum over all dates**, not the mask applied to any single image.
 
 ---
 
@@ -136,17 +138,23 @@ The script prints statistics to the console:
 
 ```
 REMAINING PIXELS (lower = more clouds removed):
-  Original:        145,230 pixels
-  SCL only:        132,450 pixels (removed 8.8%)
-  s2cloudless:     125,670 pixels (removed 13.5%)
-  cs:              130,110 pixels (removed 10.4%)
-  cs_cdf:          118,920 pixels (removed 18.1%)
-  HYBRID std:      108,450 pixels (removed 25.3%)
-  HYBRID + shadows: 102,330 pixels (removed 29.5%)
-  HYBRID FINAL:     98,760 pixels (removed 32.0%) ← Best
+  Original: <count>
+  SCL only: <count>
+  s2cloudless: <count>
+  cs: <count>
+  cs_cdf: <count>
+  HYBRID std: <count>
+  HYBRID + shadows: <count>
+  HYBRID FINAL: <count>
 ```
 
-**Interpretation**: Lower pixel count = more aggressive cloud removal.
+Counts are computed on each composite at 100 m. To get the share removed, divide by the `Original` count yourself.
+
+**Interpretation**: Lower pixel count = more aggressive cloud removal, **not** more accurate removal. `HYBRID FINAL` always has the lowest count, because a union removes at least as much as any single mask. The counts measure yield; the method has not yet been validated against reference labels (see `docs/ROADMAP.md`, Phase C).
+
+### Shadows over water
+
+The shadow-projection step ignores water pixels (SCL class 6), because water is dark in the near-infrared everywhere. Cloud shadows on water are therefore removed only when SCL (class 3) or Cloud Score+ flags them. Check shadow areas on the water visually.
 
 ### Confidence Map Colors
 
@@ -157,6 +165,8 @@ REMAINING PIXELS (lower = more clouds removed):
 | Green | 2 | Moderate confidence |
 | Yellow | 3 | High confidence |
 | Red | 4 | Very high confidence (all methods) |
+
+Note: cs and cs_cdf come from the same Cloud Score+ model, so a score of 2 can mean "Cloud Score+ only". The agreement count does not include the shadow test.
 
 ---
 
@@ -175,13 +185,13 @@ print('Date range:', s2srFiltered.aggregate_array('system:time_start'));
 
 ### Problem: Mask is too aggressive (removes too much)
 
-**Solution**: Adjust parameters to be less strict:
+**Solution**: Adjust parameters to be less strict. Cloud Score+ flags cloud where the score is **below** the threshold, so *lower* it to mask less; s2cloudless flags cloud where the probability is **above** the threshold, so *raise* it to mask less:
 ```javascript
 var PARAMS = {
-  CS_CDF_THRESH: 0.70,      // Increase threshold (was 0.60)
-  CS_THRESH: 0.70,          // Increase threshold
-  CLOUD_PROB_THRESH: 60,    // Increase threshold (was 50)
-  BUFFER: 30,               // Reduce buffer (was 50)
+  CS_CDF_THRESH: 0.50,      // Lower threshold = less masking (was 0.60)
+  CS_THRESH: 0.50,          // Lower threshold = less masking
+  CLOUD_PROB_THRESH: 60,    // Higher threshold = less masking (was 50)
+  BUFFER: 30,               // Smaller buffer (was 50)
   // ... rest of params
 };
 ```
@@ -195,15 +205,9 @@ var PARAMS = {
 
 ### Problem: UI panel not showing
 
-**Cause**: Script error or panel already exists.
+**Cause**: Script error (check the Console for a red error message) or a leftover panel from an earlier run.
 
-**Solution**:
-```javascript
-// Clear any existing panels
-ui.root.clear();
-ui.root.add(ui.Map());
-// Then re-run the script
-```
+**Solution**: Fix any error shown in the Console, then click **Reset** (next to Run) and run the script again. Avoid `ui.root.clear()`: it removes the default `Map` that the script draws its layers on.
 
 ---
 
@@ -211,20 +215,26 @@ ui.root.add(ui.Map());
 
 ### Adjusting for Different Biomes
 
+These are **unvalidated starting points**, not tested settings. Each comment says what the value does relative to the default. Keep all other parameters (only the changed ones are shown).
+
+Direction reminder: Cloud Score+ masks where score < threshold (higher = more masking); s2cloudless masks where probability > threshold (lower = more masking); the shadow test flags NIR < threshold (higher = more shadow, land only).
+
 **Water bodies** (lakes, coastal):
 ```javascript
 var PARAMS = {
-  CS_CDF_THRESH: 0.55,      // Slightly more strict
-  NIR_DARK_THRESH: 0.12,    // More sensitive to shadows
-  BUFFER: 30,               // Smaller buffer (water is flat)
+  CS_CDF_THRESH: 0.55,      // Masks LESS than 0.60: use if bright, turbid or bloom water is being masked
+  NIR_DARK_THRESH: 0.15,    // No effect over water: the shadow test skips water pixels
+  BUFFER: 50,               // Keep at least the default: clear pixels next to clouds can be
+                            // brightened over km distances; a water-specific buffer is planned
+                            // (docs/ROADMAP.md D2)
 };
 ```
 
 **Mountainous terrain**:
 ```javascript
 var PARAMS = {
-  CS_CDF_THRESH: 0.65,      // Less strict (terrain shadows)
-  CLOUD_PROJ_DIST: 2,       // Longer shadow projection
+  CS_CDF_THRESH: 0.55,      // Masks LESS than 0.60: use if terrain shadows are being masked as cloud
+  CLOUD_PROJ_DIST: 2,       // Longer shadow projection (km)
   BUFFER: 100,              // Larger buffer
 };
 ```
@@ -232,7 +242,7 @@ var PARAMS = {
 **Urban areas**:
 ```javascript
 var PARAMS = {
-  CLOUD_PROB_THRESH: 45,    // More sensitive (bright buildings)
+  CLOUD_PROB_THRESH: 55,    // Masks LESS than 50: bright roofs can be mistaken for cloud
   BUFFER: 20,               // Smaller buffer (tight mapping)
 };
 ```
@@ -254,6 +264,8 @@ Export.image.toDrive({
 });
 
 // Export mask layer
+// Note: aggHybridSmooth is the union over ALL dates (1 = cloudy on at least one date),
+// not the mask applied to any single image.
 Export.image.toDrive({
   image: aggHybridSmooth,
   description: 'S2_Hybrid_Mask',
@@ -272,7 +284,7 @@ Then click the "Run" button in the **Tasks** tab (right panel) to start the expo
 ## Best Practices
 
 1. **Always check the confidence map** - Pixels detected by only 1 method need visual verification
-2. **Use HYBRID FINAL for production** - It includes all methods + smoothing + buffer
+2. **HYBRID FINAL is the most aggressive option** - It includes all methods + smoothing + buffer; for water work, also check that bloom or turbid areas are not being removed
 3. **Compare with original** - Always toggle "Original (no mask)" to see what was removed
 4. **Test multiple thresholds** - Run with different parameters to find optimal for your area
 5. **Document your settings** - Record which parameters worked for your study area

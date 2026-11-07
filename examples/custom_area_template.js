@@ -56,27 +56,34 @@ var PARAMS = {
   NIR_DARK_THRESH: 0.15,       // Shadow detection
   CLOUD_PROJ_DIST: 1,          // Shadow projection (km)
   BUFFER: 50,                  // Cloud edge buffer (meters)
-  MIN_AGREEMENT: 1             // Methods needed to flag
+  MIN_AGREEMENT: 1             // NOT IMPLEMENTED YET: the main script always uses union
 };
+
+// The presets below are UNVALIDATED starting points (see docs/ROADMAP.md, Phase C).
+// Threshold direction (check before changing):
+//   Cloud Score+ cs / cs_cdf: cloud if score < threshold  -> higher value = MORE masking
+//   s2cloudless:              cloud if prob  > threshold  -> higher value = LESS masking
+//   Shadow test:              dark if NIR    < threshold  -> higher value = MORE shadow (land only;
+//                             the shadow test skips water pixels)
 
 // WATER BODIES (uncomment to use):
 // var PARAMS = {
-//   CS_CDF_THRESH: 0.55,      // More strict
+//   CS_CDF_THRESH: 0.55,      // Masks LESS than 0.60: use if bright/turbid/bloom water is masked
 //   CS_THRESH: 0.60,
 //   CLOUD_PROB_THRESH: 50,
-//   NIR_DARK_THRESH: 0.12,    // More sensitive shadows
+//   NIR_DARK_THRESH: 0.15,    // No effect over water (shadow test skips water)
 //   CLOUD_PROJ_DIST: 1,
-//   BUFFER: 30,               // Smaller buffer
+//   BUFFER: 50,               // Keep at least the default near clouds (docs/ROADMAP.md D2)
 //   MIN_AGREEMENT: 1
 // };
 
 // MOUNTAINOUS (uncomment to use):
 // var PARAMS = {
-//   CS_CDF_THRESH: 0.65,      // Less strict (terrain shadows)
-//   CS_THRESH: 0.70,
-//   CLOUD_PROB_THRESH: 55,
-//   NIR_DARK_THRESH: 0.18,    // Less sensitive
-//   CLOUD_PROJ_DIST: 2,       // Longer projection
+//   CS_CDF_THRESH: 0.55,      // Masks LESS than 0.60: use if terrain shadows are masked as cloud
+//   CS_THRESH: 0.55,          // Masks LESS than 0.60
+//   CLOUD_PROB_THRESH: 55,    // Masks LESS than 50
+//   NIR_DARK_THRESH: 0.18,    // Flags MORE dark pixels as shadow candidates than 0.15
+//   CLOUD_PROJ_DIST: 2,       // Longer projection (km)
 //   BUFFER: 100,              // Larger buffer
 //   MIN_AGREEMENT: 1
 // };
