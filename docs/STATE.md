@@ -21,7 +21,7 @@ draws a comparison UI and prints remaining-pixel counts. The demo case is the In
 | Item | Value |
 |---|---|
 | Code version | **1.0.2**. The code is unchanged since 2026-05-26 (`3719cde`) |
-| Repo HEAD | `main`: the 2026-11-07 docs commit on top of `1bd472d`. Committed locally, **not yet pushed** to `origin/main` |
+| Repo HEAD | `main` = `origin/main`: the 2026-11-07 docs commits on top of `1bd472d`, pushed to GitHub on 2026-11-07 |
 | GitHub | https://github.com/abdulrahman-R-A-hussein/S2-CloudMask-Hybrid (0 releases, 0 tags) |
 | Zenodo | v1.0.2 version DOI **10.5281/zenodo.20395978**; concept (all versions) DOI **10.5281/zenodo.20395977** |
 | Software Heritage | `swh:1:dir:4203251839fc8d6113b9d35e96547d589779eef8` |
@@ -50,12 +50,11 @@ draws a comparison UI and prints remaining-pixel counts. The demo case is the In
 6. **No accuracy numbers exist.** Do not quote any until Phase C produces them.
 
 ## Next actions (in order)
-1. **Author:** push the 2026-11-07 docs commit to GitHub (`git -c safe.directory=D:/dev/Cloud-Masking push`).
-2. **A2:** create the GitHub release `v1.0.3` (docs only, same code), let Zenodo pick it up (or
+1. **A2:** create the GitHub release `v1.0.3` (docs only, same code), let Zenodo pick it up (or
    upload it by hand), and bump `CITATION.cff` and the README citation to match.
-3. **A3:** correct the website entry (separate session in `D:\dev\Personal Website`).
-4. **B1–B7:** code-correctness release v1.1.0 (see [`ROADMAP.md`](ROADMAP.md)).
-5. **C1–C3:** build the water-focused reference set and run the threshold sweeps.
+2. **A3:** correct the website entry (`D:\dev\Personal Website\data\projects.json`).
+3. **B1–B7:** code-correctness release v1.1.0 (see [`ROADMAP.md`](ROADMAP.md)).
+4. **C1–C3:** build the water-focused reference set and run the threshold sweeps.
 
 ## Where to look
 - Why something is the way it is: [`DECISIONS.md`](DECISIONS.md)

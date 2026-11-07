@@ -94,6 +94,6 @@ the project up cold.
 **Not done:**
 - The script was not run in GEE (no access from this session), so F-05 still needs a GEE check.
 - The website entry was not changed (separate repo; proposed as a follow-up).
-- Committed locally on `main` at the author's request; **not pushed**.
+- (Done after all: committed as `e36ebd5` on `main` and pushed to GitHub at the author's request.)
 
 **Next:** see [`STATE.md`](STATE.md) → "Next actions".
