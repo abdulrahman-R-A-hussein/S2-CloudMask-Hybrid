@@ -18,7 +18,7 @@ validation split) are in `results/pilot_2026-11-07/`; the full development compa
 | Item | Value |
 |---|---|
 | Code version (GEE script) | **1.0.2**. Unchanged since 2026-05-26 |
-| Repo | R1 work (scripts, results, docs) committed on `main` on 2026-11-08; **not pushed yet** (`origin/main` = `96306d9`) |
+| Repo | `main` = `origin/main`; R1 work (scripts, results, docs) committed and pushed 2026-11-08 (`f83a415`) |
 | GitHub | https://github.com/abdulrahman-R-A-hussein/S2-CloudMask-Hybrid (0 releases) |
 | Zenodo | v1.0.2 version DOI **10.5281/zenodo.20395978**; concept DOI **10.5281/zenodo.20395977** |
 | Earth Engine | Service account via `GEE_SERVICE_ACCOUNT_JSON` (D-16); works (tested 2026-11-07) |
@@ -74,7 +74,7 @@ validation split) are in `results/pilot_2026-11-07/`; the full development compa
    differ from today's GEE on a minority of patches.
 
 ## Next actions (in order)
-1. **Author:** approve a push of the R1 commit.
+1. ~~Commit and push R1~~ done 2026-11-08.
 2. ~~R1~~ done 2026-11-08 (validation split).
 3. **R2:**
    - set up IRIS;
