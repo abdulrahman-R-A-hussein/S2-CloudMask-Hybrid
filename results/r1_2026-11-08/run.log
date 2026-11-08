@@ -1,0 +1,14 @@
+gee_alignment: 460/535 patches pass (B2 r>0.99 at zero shift and zero shift best); fetch failures=0; cs_cdf r at zero shift min=-0.2135
+run_dl: OmniCloudMask package 1.8.1, model v4.0, torch 2.11.0+cu128, device NVIDIA GeForce RTX 5070 Ti Laptop GPU; input CloudSEN12+ L1C B4/B3/B8 reflect-padded to 512; predicted=532 already cached=3; GPU inference seconds=53 (includes model load; first call also downloads weights)
+R1 development benchmark, VALIDATION split (test split locked, D-15)
+detector inputs: Earth Engine cache (D-17); labels/WorldCover/bundled DL masks: CloudSEN12+
+alignment gate: 460/535 pass; failures excluded from the main tables
+patches=535 water-rich (>= 5% water)=105 seconds_scoring=29
+deep-learning masks found in cache: {"omnicloudmask": 535} of 535 patches
+sensitivity subsets: all patches=535, zero best shift=483
+n_boot=1000 seed=0 sweeps={"cs": [0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8], "cs_cdf": [0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8], "s2cloudless": [20, 25, 30, 35, 40, 45, 50, 55, 60]}
+params={"CS_CDF_THRESH": 0.6, "CS_THRESH": 0.6, "CLOUD_PROB_THRESH": 50, "NIR_DARK_THRESH": 0.15, "CLOUD_PROJ_DIST": 1, "BUFFER": 50, "ERODE": 20}
+seconds_total=31
+git=96306d9
+python=3.11.16
+numpy=2.4.6 pandas=3.1.1 scipy=1.17.1

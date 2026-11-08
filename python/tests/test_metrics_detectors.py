@@ -89,3 +89,31 @@ def test_shadow_search_looks_toward_the_sun():
     # SCL water is never a shadow candidate (AUDIT F-03)
     sh_w = detectors.shadow_projection(cloud, dark, np.full((500, 500), 6, np.uint8), 180.0)
     assert not sh_w.any()
+
+
+def _toy_counts():
+    rows = []
+    for s in "abcdef":
+        for meth, fn in (("good", 1), ("bad", 4)):
+            rows.append({"roi_id": s, "patch": s, "method": meth, "stratum": "all", "tp": 10 - fn, "fp": 1,
+                         "fn": fn, "tn": 20, "thick_n": 10, "thick_hit": 10 - fn, "thin_n": 0, "thin_hit": 0,
+                         "shadow_n": 0, "shadow_hit": 0})
+    return pd.DataFrame(rows)
+
+
+def test_scores_arr_matches_scores():
+    df = _toy_counts()
+    tot = df[df.method == "bad"][metrics.COUNT_COLS].sum()
+    a = metrics.scores_arr(tot.to_numpy(dtype=float))
+    s = metrics.scores(tot)
+    for k in ("leak_%", "discard_%", "BOA_%", "F1_%"):
+        assert np.isclose(a[k], s[k])
+
+
+def test_paired_diff_detects_a_consistent_difference():
+    r = metrics.paired_diff(_toy_counts(), "good", "bad", "all", n_boot=300)
+    assert r["n_sites"] == 6
+    assert r["leak_diff"] < 0 and r["leak_hi"] < 0  # good leaks less at every site
+    assert r["BOA_diff"] > 0 and r["BOA_lo"] > 0 and r["BOA_p"] < 0.05
+    same = metrics.paired_diff(_toy_counts(), "good", "good", "all", n_boot=100)
+    assert same["BOA_diff"] == 0 and same["BOA_lo"] == 0 == same["BOA_hi"]

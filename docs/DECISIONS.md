@@ -184,3 +184,26 @@ To add one, append D-NN at the bottom, set `status: current`, and log it in [`LO
   scored 277,542 pixels, against 1,554,486 after the fix. It was stopped and replaced.
 - **Follow-up:** consider reporting ROI_00009 to the dataset maintainers (an outward action; the
   author decides).
+
+### D-18 · OmniCloudMask is the GPU deep-learning reference; CloudS2Mask is dropped (2026-11-08)
+- **Status:** current
+- **Decision:** R1 runs OmniCloudMask (package 1.8.1, model v4.0) locally on the RTX 5070 Ti
+  (PyTorch 2.11 + CUDA 12.8, `uv sync --group dl`). CloudS2Mask is not run.
+- **Rationale:** CloudS2Mask's API takes only full `.SAFE` scene folders, not patch arrays, and
+  its README says it is being replaced by OmniCloudMask from the same group
+  (https://github.com/DPIRD-DMA/CloudS2Mask, read 2026-11-08).
+- **Input choice:** CloudSEN12+ L1C B4/B3/B8 digital numbers (the imagery the labels were drawn
+  on); OmniCloudMask normalises internally. Patches are reflect-padded 509 → 512.
+- **Caveat:** OmniCloudMask was trained on a single Sentinel-2 dataset (paper abstract); whether
+  that includes CloudSEN12+ validation patches is **not verified**, so its validation-split
+  numbers may be in-domain and optimistic, like UnetMobV2's.
+
+### D-19 · Alignment gate applied to every patch; failures excluded, two sensitivity subsets (2026-11-08)
+- **Status:** current (protocol draft v0.2)
+- **Decision:** `check_gee_alignment.py --n 0` checks all 535 validation patches. Main R1 tables
+  use only patches that pass the gate exactly as written in the protocol (B2 r > 0.99 at zero
+  shift and zero shift best). Two sensitivity tables are always reported: all patches, and
+  patches whose best shift is zero regardless of r.
+- **Rationale:** the protocol says failures are excluded, never silently kept. But the r > 0.99
+  part can fail on low-contrast (fully cloudy) scenes with no real offset, so exclusion could
+  bias the sample; the sensitivity tables show whether it matters.

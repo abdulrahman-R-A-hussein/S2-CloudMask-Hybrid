@@ -174,3 +174,73 @@ internal method.
 - Nothing committed.
 
 **Next:** R1 and R2 (see STATE).
+
+## 2026-11-08 — R1 development benchmark (validation split)
+
+**Asked:** start R1 (the full comparison).
+
+**Done:**
+1. **Alignment gate on every patch** (`check_gee_alignment.py --n 0`, cached as
+   `gee_align_<tid>.npz`): **460 of 535 pass**. Of the 75 failures, 52 have a one-pixel best
+   shift ((1,0) 34, (0,1) 13, (1,1) 5) and 23 have zero best shift but r < 0.99 (likely
+   low-contrast scenes; not verified). Main tables exclude all 75 (protocol §2); two sensitivity
+   tables keep them (D-19). `results/r1_2026-11-08/gee_alignment.csv`.
+2. **OmniCloudMask v4.0** (package 1.8.1) run on the RTX 5070 Ti (PyTorch 2.11 + CUDA 12.8,
+   `uv sync --group dl`) on all 535 patches; 53 s of GPU time in total. CloudS2Mask dropped (D-18).
+3. New code: `scripts/run_r1.py`, `scripts/run_dl.py`, `src/cloudbench/strata.py` (coast ≤ 200 m,
+   open water), paired and stratum-difference bootstraps in `metrics.py` (vectorised), ECE.
+   9 tests pass.
+4. Protocol draft v0.2 (change log §7); decisions D-18, D-19.
+
+**Reproducibility check:** the all-patches sensitivity table reproduces the R0 pilot exactly
+(`cs<0.60` 7.6 / 14.8 / 88.6), so the code change did not move any number.
+
+**Results** (`results/r1_2026-11-08/summary.md`; 460 aligned patches, 107 sites, 119.2 M pixels;
+water 14.9 M px in 67 sites). DEVELOPMENT numbers, not paper results.
+
+| Method | Leak % all | Discard % all | BOA % all | BOA % water | Shadow recall % water / land |
+|---|---|---|---|---|---|
+| cs < 0.60 | 9.2 | 17.8 | 87.1 [85.8, 88.6] | 84.6 | 59.3 / 91.3 |
+| v1.0.2 union | 6.7 | 22.5 | 86.1 | 84.4 | 60.0 / 92.6 |
+| v1.0.2 FINAL | 5.1 | 26.9 | 84.7 | 84.1 | 64.8 / 96.4 |
+| UnetMobV2-v2 (in-domain) | 7.7 | 6.0 | 93.3 | 93.3 | 74.8 / 90.2 |
+| SEnSeIv2 | 7.0 | 7.5 | 93.0 | 93.2 | 87.0 / 91.7 |
+| **OmniCloudMask** | 7.7 | 5.7 | 93.4 [92.4, 94.4] | **94.7 [93.3, 96.0]** | **91.8 / 91.3** |
+
+**Findings:**
+1. **H1 (water leaks more), development evidence:** water − land leak is positive with a CI above
+   0 for SCL (+6.7), QA60 (+7.1), `cs` (+5.6 [+0.2, +11.8]), the v1.0.2 union (+7.8) and FINAL
+   (+7.6). For s2cloudless (+5.6 [−0.8, +11.9]) and `cs_cdf` (+4.6 [−2.6, +13.4]) the CI includes
+   0. So "every operational mask" is **not yet supported** as written. None of the three
+   deep-learning masks shows a water gap (OmniCloudMask −2.8 [−6.1, +0.4]).
+2. **Shadow over water is a GEE-native failure, not a universal one.** `cs` catches 59 % of
+   shadow pixels on water vs 91 % on land (Δ −32 points, CI [−46, −15]). OmniCloudMask catches 92 %
+   on water, and SEnSeIv2 87 %. M4 must therefore be judged against deep learning too, not only
+   against `cs`.
+3. **Best mask over water: OmniCloudMask**, +10.1 BOA points over `cs` (paired CI [+7.5, +12.6])
+   and +1.4 over UnetMobV2 (CI [+0.3, +2.6]). Caveat: whether its training data include these
+   validation patches is not verified (D-18).
+4. **H2 (union trades discard for leak):** against `cs`, the union lowers leak by 2.5 points
+   ([−4.0, −1.3]) and raises discard by 4.6 ([+2.9, +6.9]); BOA −1.0. But the discard increase is
+   **smaller over water (+1.4) than over land (+5.1)**, the opposite of H2's "most over water"
+   clause.
+5. **The v1.0.2 add-ons cost more than they give:** the shadow projection adds 1.4 points of
+   shadow recall overall (0.2 on water) for 1.6 points more discard; the morphology lowers leak
+   by 1.3 for 2.8 more discard. Both lower BOA (paired CIs exclude 0). Near the coast FINAL throws
+   away 32.8 % of clear pixels.
+6. **Default thresholds are not the best ones.** Best single-detector BOA: `cs_cdf` at 0.75
+   (89.3 %) and `cs` at 0.55 (88.9 %), against 83.4 % and 87.1 % at the 0.60 defaults. These were
+   picked on the same data they are scored on, so they are optimistic; R3 must choose thresholds
+   on the train split.
+7. **Calibration:** read as probabilities, the raw scores are off by 13–17 % ECE; s2cloudless is
+   worst over water (22.5 %). This supports M3 (calibration).
+8. **Coast (≤ 200 m):** the GEE masks discard more clear pixels there (union 25.2 %), and
+   OmniCloudMask's shadow recall falls to 81.9 %. This is a hard stratum for everybody.
+9. Excluding the 75 misaligned patches raises every method's leak by about 1–2 points but does
+   not change the ranking (sensitivity tables).
+
+**Not done:** the train split (only validation was scored); special strata turbid, bloom and
+glint (they need labels or ancillary data, R2/R3); committing.
+
+**Next:** R2 (IRIS + 10-patch timing pilot) and the R3 design, which now has to aim at deep
+learning over water, not only at `cs`.

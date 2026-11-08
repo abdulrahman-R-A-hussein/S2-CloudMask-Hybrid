@@ -7,6 +7,14 @@ a minor bump.
 ## [Unreleased]
 `S2_CloudMask_SCIENTIFIC.js` is unchanged.
 
+### Added (research, 2026-11-08, R1)
+- `python/scripts/run_r1.py` (all methods, sweeps, coast stratum, paired and water-minus-land
+  bootstraps, ECE, T1), `python/scripts/run_dl.py` (OmniCloudMask on GPU),
+  `python/src/cloudbench/strata.py`; alignment gate on every patch; `dl` dependency group
+  (PyTorch CUDA 12.8 + OmniCloudMask).
+- `results/r1_2026-11-08/`: development results on the validation split.
+- Decisions D-18, D-19; audit X-06; protocol draft v0.2.
+
 ### Added (research, 2026-11-07, second session)
 - `python/` benchmark package `cloudbench`:
   - CloudSEN12+ reader and Earth Engine input fetch;

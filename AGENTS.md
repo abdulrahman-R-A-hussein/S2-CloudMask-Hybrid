@@ -55,6 +55,8 @@ docs/
 python/                         benchmark code (uv project; see python/README.md)
   src/cloudbench/               data (CloudSEN12+ + GEE), detectors (v1.0.2 replica), metrics
   scripts/run_pilot.py          scores the masks, water vs land, with site-bootstrap CIs
+  scripts/run_r1.py             R1: all methods, sweeps, paired tests, coast, ECE (offline, from cache)
+  scripts/run_dl.py             OmniCloudMask on the GPU (uv sync --group dl)
   tests/                        pytest
 results/<run>/                  committed outputs: counts, metrics, provenance, run.log
 ```
@@ -64,6 +66,7 @@ results/<run>/                  committed outputs: counts, metrics, provenance, 
 - Detector inputs come from Earth Engine, **not** from the CloudSEN12+ bundled Cloud Score+
   layers, which are wrong (D-17).
 - `TortillaDataFrame.read()` takes a row position.
+- Main tables use only patches that pass the GEE alignment gate; sensitivity tables keep the rest (D-19).
 
 ## Key code locations (`S2_CloudMask_SCIENTIFIC.js`)
 | Lines | What |

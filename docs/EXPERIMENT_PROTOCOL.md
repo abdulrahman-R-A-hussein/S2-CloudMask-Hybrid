@@ -1,6 +1,6 @@
 # Experiment protocol for Paper 1 (pre-registration)
 
-**Status: DRAFT v0.1, 2026-11-07.** This protocol fixes the hypotheses, data splits, metrics,
+**Status: DRAFT v0.2, 2026-11-08** (v0.1 2026-11-07; change log in §7). This protocol fixes the hypotheses, data splits, metrics,
 statistics and decision rules **before any test-split result is computed**.
 - Changes are allowed until it is frozen (v1.0, a tagged commit). Each change is logged at the
   bottom with its date and reason.
@@ -36,7 +36,7 @@ From CloudSEN12+ we take only the labels, ESA WorldCover and the published deep-
 
 Quantified in `results/pilot_2026-11-07/provenance_cs12_vs_gee.csv`.
 
-**Alignment gate.** On ≥ 5 patches per run, GEE B2 against the CloudSEN12+ L1C B2 must give
+**Alignment gate.** On every patch (since v0.2), GEE B2 against the CloudSEN12+ L1C B2 must give
 r > 0.99, with zero shift as the best of the 3×3 one-pixel shifts. A patch that fails is listed
 and excluded, never silently kept (`scripts/check_gee_alignment.py`).
 
@@ -117,3 +117,13 @@ Its numbers are labelled PILOT and are **not** paper results. The pilot does not
 ## 7. Change log
 - 2026-11-07 v0.1: first draft, written with the pilot. D-17 (GEE provenance) is added after the
   pilot's provenance check (one corrupted site; SCL/s2cloudless differences on a minority of patches).
+- 2026-11-08 v0.2 (R1, validation split only; no test data seen):
+  - Alignment gate run on every patch, not ≥ 5; sensitivity tables for all patches and for
+    zero-best-shift patches (D-19).
+  - Coast stratum defined: ≤ 200 m from the WorldCover water/land edge, either side, measured
+    inside the patch; plus "open water" (> 200 m from land). `python/src/cloudbench/strata.py`.
+  - CloudS2Mask removed from §3 (D-18). `MSK_CLASSI` is not applicable on CloudSEN12+ (dates
+    2018–2020, before 2024-02-28); it moves to the new water label set.
+  - Weighted vote moves to R3: its weights must be fitted, which is the fusion model's job.
+  - Calibration (ECE, 10 equal bins) computed for `1 − cs`, `1 − cs_cdf` and s2cloudless/100.
+  - Paired differences report a two-sided bootstrap p (share of resamples crossing zero, ×2).
